@@ -1,36 +1,55 @@
 import React from "react";
-import { View, Button, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Button,
+  Image,
+  StyleSheet,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Image source={require("../assets/nasalogo.png")} style={styles.logo} />
-      <Button
-        title="Astronomy Picture of The Day"
-        onPress={() => navigation.navigate("APOD")}
-      />
-      <Button
-        title="ISS Tracking"
-        onPress={() => navigation.navigate("ISS Tracking")}
-      />
-      <Button
-        title="Mars Rover Photos"
-        onPress={() => navigation.navigate("Rover Photos")}
-      />
-    </View>
+    <ScrollView>
+      <ImageBackground
+        source={require("../assets/homeImg.jpg")}
+        style={styles.backGroundImage}
+        resizeMode="cover"
+      >
+        <Image source={require("../assets/nasalogo.png")} style={styles.logo} />
+        <Button
+          title="Astronomy Picture of The Day"
+          onPress={() => navigation.navigate("APOD")}
+        />
+        <Button
+          title="ISS Tracking"
+          onPress={() => navigation.navigate("ISS Tracking")}
+        />
+        <Button
+          title="Mars Rover Photos"
+          onPress={() => navigation.navigate("Rover Photos")}
+        />
+      </ImageBackground>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  buttons: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     paddingBottom: 50,
   },
+  backGroundImage: {
+    flex: 1,
+    height: 900,
+    alignItems: "center",
+    justifyContent: "top",
+  },
   logo: {
-    width: 155,
-    height: 155,
+    width: 300,
+    height: 81,
     marginBottom: 40,
+    marginTop: 50,
+    opacity: 0.7,
   },
 });
