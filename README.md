@@ -1,6 +1,6 @@
 # 🌌 AstroTrack
 
-## AstroTrack is a multi-purpose mobile app where you can keep track on NASA's latest content including the Astronomy Picture of the Day, real-time tracking of the International Space Station (ISS), Mars Rover photos and Near Earth object data - all in one place. Utilized by NASA's & Open Notify's API.
+### AstroTrack is a multi-purpose mobile app where you can keep track on NASA's latest content including the Astronomy Picture of the Day, real-time tracking of the International Space Station (ISS), Mars Rover photos and Near Earth object data - all in one place. Utilized by NASA's & Open Notify's API.
 
 This app is developed as part of the Cross-platform Mobile Applications course project at Åland University of Applied Sciences.
 
@@ -42,3 +42,4 @@ This app is developed as part of the Cross-platform Mobile Applications course p
 
 - React Native
 - Expo Go
+---
