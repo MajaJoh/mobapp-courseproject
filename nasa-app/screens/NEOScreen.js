@@ -12,10 +12,6 @@ const auToKm = (au) => {
   return au * 149597870.7;
 };
 
-const auToMiles = (au) => {
-  return au * 92955807.3;
-};
-
 const NEOList = () => {
   const [neos, setNeos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,9 +24,10 @@ const NEOList = () => {
         "dist-max": "0.05",
         body: "Earth",
         diameter: true,
-        fullname: true,
+        des: true,
       };
       const data = await fetchNEOs(params);
+     // console.log("Raw API response:", data); 
       if (data) {
         const structuredData = data.data.map((item) => {
           const obj = {};
@@ -39,6 +36,7 @@ const NEOList = () => {
           });
           return obj;
         });
+        //console.log("Structured data:", structuredData); 
         setNeos(structuredData);
       }
       setLoading(false);
@@ -47,27 +45,29 @@ const NEOList = () => {
     fetchData();
   }, []);
 
-  const renderItem = ({ item }) => {
-    const name = item.fullname;
-    const date = item.cd;
-    const distAU = parseFloat(item.dist);
-    const distKm = auToKm(distAU);
-    const distMiles = auToMiles(distAU);
-    const velocity = item.v_rel;
-    const diameter = item.diameter ? `${item.diameter} km` : "Unknown";
+const renderItem = ({ item }) => {
+  const name = item.des || "Unknown"; 
+  const date = item.cd;
+  const distAU = parseFloat(item.dist);
+  const distKm = auToKm(distAU);
+  const velocity = item.v_rel;
+  const diameter = item.diameter ? `${item.diameter} km` : "Unknown";
 
-    return (
-      <View style={[styles.item, { backgroundColor: getCardColor(distAU) }]}>
-        <Text style={styles.title}>🪐 {name}</Text>
-        <Text>📅 Close Approach: {date}</Text>
-        <Text>
-          📏 Distance: {distAU.toFixed(4)} AU, {distKm.toFixed(0)} km{" "}
-        </Text>
-        <Text>🚀 Velocity: {velocity} km/s</Text>
-        <Text>📐 Diameter: {diameter}</Text>
-      </View>
-    );
-  };
+  //console.log("Rendering item:", name);
+
+  return (
+    <View style={[styles.item, { backgroundColor: getCardColor(distAU) }]}>
+      <Text style={styles.title}>☄️ {name}</Text>
+      <Text>📅 Close Approach: {date}</Text>
+      <Text>
+        📏 Distance: {distAU.toFixed(4)} AU, {distKm.toFixed(0)} km{" "}
+      </Text>
+      <Text>🚀 Velocity: {velocity} km/s</Text>
+      <Text>📐 Diameter: {diameter}</Text>
+    </View>
+  );
+};
+
 
   if (loading) {
     return (
@@ -76,12 +76,13 @@ const NEOList = () => {
   }
 
   return (
-    <FlatList
-      data={neos}
-      renderItem={renderItem}
-      keyExtractor={(item, index) => item.des || index.toString()}
-      contentContainerStyle={styles.container}
-    />
+
+<FlatList
+  data={neos}
+  renderItem={renderItem}
+  keyExtractor={(item, index) => item.des || index.toString()}
+  contentContainerStyle={styles.container}
+/>
   );
 };
 

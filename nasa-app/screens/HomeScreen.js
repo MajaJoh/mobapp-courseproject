@@ -34,7 +34,7 @@ export default function HomeScreen({ navigation }) {
       >
         <Image source={require("../assets/nasalogo.png")} style={styles.logo} />
         <Text style={styles.introText}>
-          "Hello and welcome to our NASA App! Text about the app comes here :D
+          Welcome to AstroTrack! In this app you can view daily astronomy pictures with descriptions, track where the ISS currently is, discover Mars with pictures from the Curiosity Rover, and track near earth objects (asteroids, comets) that hopefully won't crash into earth and kill us all!
         </Text>
         <Pressable
           style={styles.button}
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_500Medium_Italic",
   },
   introText: {
-    fontSize: 26,
+    fontSize: 16,
     marginLeft: 25,
     color: "white",
     fontFamily: "Inter_500Medium_Italic",
