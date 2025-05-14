@@ -6,15 +6,15 @@ This app is developed as part of the Cross-platform Mobile Applications course p
 
 ---
 
-# ☄️ How to Run and Test the App
+## ☄️ How to Run and Test the App
 
-- Install needed dependencies with: `npm install`
+- Redirect your terminal to *nasa-app* with `cd nasa-app` and install needed dependencies with `npm install`  
 - Have Expo go installed to your phone (Works both on Android and iOS) and set up in Visual Studio Code
 - Run `npx expo start` and scan the QR code provided
 
 ---
 
-# ☀️ Must-have:
+## ☀️ Must-have:
 
 - Astronomy Picture of the Day: Display NASA's Astronomy Picture of the Day (APOD) with a description and relevant information. ✅
 
@@ -24,7 +24,7 @@ This app is developed as part of the Cross-platform Mobile Applications course p
 
 ---
 
-# 🌑 Should-have:
+## 🌑 Should-have:
 
 - Near-Earth Objects (NEOs): Track and display information about asteroids and comets that come close to Earth. ✅
 
@@ -32,14 +32,22 @@ This app is developed as part of the Cross-platform Mobile Applications course p
 
 ---
 
-# 🌟 Nice-to-have:
+## 🌟 Nice-to-have:
 
 - User Notifications: Send notifications to users about upcoming celestial events, mission milestones, or new content updates. ❌ (Couldn't get it working)
 
 ---
 
-# 🛠️ Tech Stack
+## 🛠️ Tech Stack Used
 
 - React Native
 - Expo Go
+  
+---
+
+## 👩‍🚀👩‍🚀 Project Members
+
+- Maja Johansson
+- Cecilia Stude
+
 ---
