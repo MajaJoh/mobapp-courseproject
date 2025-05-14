@@ -54,7 +54,18 @@ export default function HomeScreen({ navigation }) {
           style={styles.button}
           onPress={() => navigation.navigate("Rover Photos")}
         >
+
+          <Text style={styles.buttonText}>Mars Rover Photos</Text>
+        </Pressable>
+
+        <Pressable
+          style={styles.button}
+          onPress={() => navigation.navigate("NEO")}
+        >
+          <Text style={styles.buttonText}>Near Earth Objects</Text>
+
           <Text style={styles.buttonText}>Curiosity Rover Photos</Text>
+
         </Pressable>
       </ImageBackground>
     </ScrollView>
