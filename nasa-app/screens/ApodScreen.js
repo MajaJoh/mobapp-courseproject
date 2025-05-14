@@ -8,8 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import { Inter_600SemiBold } from "@expo-google-fonts/inter/600SemiBold";
-import { Inter_300Light } from "@expo-google-fonts/inter/300Light";
+import { Inter_300Light, Inter_600SemiBold } from "@expo-google-fonts/inter";
 import { useFonts } from "expo-font";
 
 const NASA_API_KEY = "Y1mbjx2BgRuuJCPfRtmegQAUTgQHepFAtcbiSTlK";
