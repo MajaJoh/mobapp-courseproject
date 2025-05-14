@@ -6,93 +6,204 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
+  Button,
+  TextInput,
 } from "react-native";
+import { Inter_500Medium, Inter_600SemiBold } from "@expo-google-fonts/inter";
+import { useFonts } from "expo-font";
+import { Picker } from "@react-native-picker/picker";
 
 const NASA_API_KEY = "Y1mbjx2BgRuuJCPfRtmegQAUTgQHepFAtcbiSTlK";
 
 export default function RoverPhotosScreen() {
   const [roverData, setRoverData] = useState([]);
+  const [filteredRoverData, setFilteredRoverData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [sol, setSol] = useState(1000); // simulate pagination by changing sol
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [endReached, setEndReached] = useState(false);
+  const [customSol, setCustomSol] = useState("1000");
+  const [selectedCamera, setSelectedCamera] = useState("");
+  const [tempSelectedCamera, setTempSelectedCamera] = useState("");
+  const [availableCameras, setAvailableCameras] = useState([]);
+
+  const [fontsLoaded] = useFonts({
+    Inter_600SemiBold,
+    Inter_500Medium,
+  });
 
   useEffect(() => {
-    fetchPhotos();
+    fetchPhotosForSol(customSol);
   }, []);
 
-  const fetchPhotos = async () => {
-    if (loadingMore || endReached) return;
+  const fetchPhotosForSol = async (sol) => {
+    console.log("Fetching photos for Sol:", sol);
+    setLoading(true);
+    const fetchedPhotos = [];
 
-    setLoadingMore(true);
     try {
       const response = await fetch(
         `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&api_key=${NASA_API_KEY}`
       );
       const data = await response.json();
-
-      if (data.photos.length === 0) {
-        setEndReached(true);
+      console.log(`Fetched ${data.photos.length} photos for Sol ${sol}`);
+      if (data.photos.length > 0) {
+        fetchedPhotos.push(...data.photos);
       } else {
-        setRoverData((prev) => [...prev, ...data.photos.slice(0, 25)]);
-        setSol((prevSol) => prevSol + 1);
+        console.log(`No photos found for Sol ${sol}`);
       }
     } catch (error) {
-      console.error("Error fetching Rover Photos:", error);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
+      console.error(`Error fetching photos for Sol ${sol}:`, error);
     }
+
+    setRoverData(fetchedPhotos);
+    setFilteredRoverData(fetchedPhotos);
+    extractAvailableOptions(fetchedPhotos);
+    setLoading(false);
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.photoCard}>
-      <Image
-        source={{ uri: item.img_src }}
-        style={styles.image}
-        resizeMode="cover"
-      />
-    </View>
-  );
+  const extractAvailableOptions = (photos) => {
+    const cameras = new Set();
+    photos.forEach((photo) => {
+      cameras.add(photo.camera.name);
+    });
+    setAvailableCameras(Array.from(cameras));
+  };
 
-  if (loading && roverData.length === 0) {
+  const handleFilter = () => {
+    fetchPhotosForSol(customSol);
+  };
+
+  useEffect(() => {
+    if (selectedCamera) {
+      const filtered = roverData.filter(
+        (photo) => photo.camera.name === selectedCamera
+      );
+      setFilteredRoverData(filtered);
+    } else {
+      setFilteredRoverData(roverData);
+    }
+  }, [selectedCamera, roverData]);
+
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.photoCard}>
+        <Image
+          source={{ uri: item.img_src }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      </View>
+    );
+  };
+
+  if (!fontsLoaded || (loading && roverData.length === 0)) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading...</Text>
       </View>
     );
   }
 
   return (
-    <FlatList
-      data={roverData}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={renderItem}
-      numColumns={3}
-      contentContainerStyle={styles.container}
-      onEndReached={fetchPhotos}
-      onEndReachedThreshold={0.5}
-      ListFooterComponent={
-        loadingMore ? <ActivityIndicator size="small" color="#0000ff" /> : null
-      }
-    />
+    <View style={styles.center}>
+      <View style={styles.introductionBox}>
+        <Image
+          source={require("../assets/MarsRover.jpg")}
+          style={styles.introImg}
+        />
+        <View style={styles.textBox}>
+          <Text style={styles.title}>Mars Curiosity</Text>
+          <Text style={styles.description}>
+            Here you can find images taken by the Curiosity rover currently
+            stationed on Mars.
+          </Text>
+        </View>
+      </View>
+
+      <View style={{ padding: 10 }}>
+        <Text>Camera:</Text>
+        <Picker
+          selectedValue={tempSelectedCamera}
+          onValueChange={(value) => setTempSelectedCamera(value)}
+          style={{ height: 50 }}
+        >
+          <Picker.Item label="All" value="" />
+          {availableCameras.map((cam) => (
+            <Picker.Item key={cam} label={cam} value={cam} />
+          ))}
+        </Picker>
+
+        <Text>Sol (Martian Day):</Text>
+        <TextInput
+          style={{ borderWidth: 1, padding: 5, marginVertical: 5 }}
+          keyboardType="numeric"
+          value={customSol}
+          onChangeText={(text) => setCustomSol(text)}
+        />
+
+        <Button
+          title="Apply Filters"
+          color="black"
+          onPress={() => {
+            setSelectedCamera(tempSelectedCamera);
+            handleFilter();
+          }}
+        />
+      </View>
+
+      <FlatList
+        data={filteredRoverData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
+        numColumns={3}
+        ListEmptyComponent={
+          <Text style={{ padding: 20 }}>No photos found.</Text>
+        }
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   center: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "white",
   },
-  container: {
-    padding: 8,
-    backgroundColor: "#fff",
+  introductionBox: {
+    width: "100%",
+    height: 180,
+    marginTop: 20,
+    backgroundColor: "#242424",
+    flexDirection: "row",
+  },
+  introImg: {
+    width: 120,
+    height: 140,
+    marginLeft: 10,
+    marginTop: 20,
+  },
+  textBox: {
+    flex: 1,
+    paddingHorizontal: 10,
+    marginTop: 13,
+
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 20,
+    color: "white",
+    fontFamily: "Inter_600SemiBold",
+    marginBottom: 5,
+  },
+  description: {
+    fontSize: 12,
+    color: "white",
+    fontFamily: "Inter_500Medium",
   },
   photoCard: {
     flex: 1 / 3,
     aspectRatio: 1,
     margin: 4,
+    padding: 3,
   },
   image: {
     width: "100%",

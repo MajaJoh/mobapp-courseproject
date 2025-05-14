@@ -35,6 +35,7 @@ export default function ISSTrackScreen() {
         })
         .finally(() => setLoading(false));
     };
+
     const intervalId = setInterval(fetchIssData, 1000);
     return () => clearInterval(intervalId);
   }, []);
